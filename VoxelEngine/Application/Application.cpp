@@ -6,16 +6,44 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../Core/Rendering/ShaderProgram.hpp"
 
-Voxel* createRandomVoxelGrid(int x, int y, int z)
+struct VoxelGrid
 {
-	int size = x * y * z;
+	glm::vec3 gridOrigin;
+	glm::ivec3 gridDimensions;
+	std::vector<Voxel> voxels;
+};
 
-	Voxel* grid = new Voxel[size];
+VoxelGrid createRandomVoxelGrid(int x, int y, int z)
+{
+	VoxelGrid grid;
+	grid.gridOrigin = { 0, 0, 0 };
+	grid.gridDimensions = { x, y, z };
+
+	int size = x * y * z;
+	grid.voxels.resize(size);
 
 	for (int i = 0; i < size; i++)
 	{
 		if (rand() % 2)
-			grid[i].rgba = { 1 ,0, 0, 0 };
+			grid.voxels[i].rgba = { 1 ,1, 1, 1 };
+		else
+			grid.voxels[i].rgba = { 0 ,1, 0, 1 };
+	}
+
+	return grid;
+}
+
+glm::vec4* createRandomVoxelGrid2(int x, int y, int z)
+{
+	int size = x * y * z;
+	glm::vec4* grid = new glm::vec4[size];
+
+	for (int i = 0; i < size; i++)
+	{
+		if (rand() % 2)
+			grid[i] = { 1 ,1, 1, 1 };
+		else
+			grid[i] = { 0 ,1, 0, 1 };
 	}
 
 	return grid;
@@ -41,12 +69,16 @@ Application::Application(int wnd_width, int wnd_height)
 
 void Application::run()
 {
+	std::cout << sizeof(VoxelGrid::gridOrigin)<<"\n";
+	std::cout << sizeof(VoxelGrid::gridDimensions)<<"\n";
+	std::cout << sizeof(VoxelGrid::voxels)<<"\n";
+	std::cout << sizeof(VoxelGrid)<<"\n";
 	std::cout << sizeof(Voxel)<<"\n";
-	std::cout << sizeof(float)<<"\n";
 
 	glm::ivec3 gridDim = { 100, 100, 100 };
 	int gridSize = gridDim.x * gridDim.y * gridDim.z;
-	Voxel* grid = createRandomVoxelGrid(gridDim.x, gridDim.y, gridDim.z);
+	VoxelGrid grid = createRandomVoxelGrid(gridDim.x, gridDim.y, gridDim.z);
+	glm::vec4* grid2 = createRandomVoxelGrid2(gridDim.x, gridDim.y, gridDim.z);
 
 	std::vector<float> vertices =
 	{
@@ -61,6 +93,9 @@ void Application::run()
 		0, 1, 2,
 		0, 3, 2
 	};
+
+	/*for (int i = 0; i < gridSize; i++)
+		std::cout << grid2[i].x << "\n";*/
 
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
@@ -81,7 +116,7 @@ void Application::run()
 	GLuint ssbo;
 	glGenBuffers(1, &ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Voxel) * gridSize, grid, GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * gridSize, grid2, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
 
 	glBindVertexArray(0);
