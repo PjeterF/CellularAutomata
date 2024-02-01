@@ -13,6 +13,12 @@ struct VoxelGrid
 	std::vector<Voxel> voxels;
 };
 
+struct SSBO_data
+{
+	glm::vec4 gridDimensions;
+	glm::vec4* grid;
+};
+
 VoxelGrid createRandomVoxelGrid(int x, int y, int z)
 {
 	VoxelGrid grid;
@@ -80,6 +86,10 @@ void Application::run()
 	VoxelGrid grid = createRandomVoxelGrid(gridDim.x, gridDim.y, gridDim.z);
 	glm::vec4* grid2 = createRandomVoxelGrid2(gridDim.x, gridDim.y, gridDim.z);
 
+	SSBO_data data;
+	data.gridDimensions = { gridDim.x, gridDim.y, gridDim.z, 1.0f };
+	data.grid = grid2;
+
 	std::vector<float> vertices =
 	{
 		1, 1,
@@ -116,7 +126,9 @@ void Application::run()
 	GLuint ssbo;
 	glGenBuffers(1, &ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) * gridSize, grid2, GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) + sizeof(glm::vec4) * gridSize, nullptr, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(glm::vec4), &data.gridDimensions);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4) * gridSize, data.grid);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
 
 	glBindVertexArray(0);

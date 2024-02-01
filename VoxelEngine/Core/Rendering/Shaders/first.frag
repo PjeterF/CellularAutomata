@@ -3,6 +3,7 @@ precision highp float;
 
 layout(std430, binding = 0) buffer VoxelGrid
 {
+	vec4 gridDim;
 	vec4 rgba[];
 } grid;
 
