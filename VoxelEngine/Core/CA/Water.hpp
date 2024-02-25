@@ -1,11 +1,9 @@
 #pragma once
 #include "Cell.hpp"
 
-class Vaccum : public Cell
+class Water : public Cell
 {
 public:
-	Vaccum();
+	Water(glm::vec4 color);
 	virtual void update(glm::vec2 position, CellGrid& grid) override;
-
-	static glm::vec4 vaccumColor;
 };

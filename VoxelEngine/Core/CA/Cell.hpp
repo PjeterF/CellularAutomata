@@ -4,10 +4,21 @@
 
 class CellGrid;
 
+enum CellType
+{
+	NoType = 0,
+	Empty,
+	ImmovableSolid,
+	MovableSolid,
+	Gas,
+	Liquid
+};
+
 class Cell
 {
 public:
 	Cell(glm::vec4 color = { 0, 0, 0, 0 });
 	virtual void update(glm::vec2 position, CellGrid& grid) = 0;
 	glm::vec4 color;
+	CellType type = NoType;
 };

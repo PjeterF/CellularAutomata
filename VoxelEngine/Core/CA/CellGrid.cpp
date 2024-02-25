@@ -17,12 +17,13 @@ CellGrid::CellGrid(int dimensions)
     colorGrid.resize(dimensions * dimensions);
     for (int i = 0; i < dimensions * dimensions; i++)
     {
-        colorGrid[i] = { 1, 1, 1, 1 };
+        colorGrid[i] = Vaccum::vaccumColor;
     }
 }
 
 void CellGrid::insertCell(int x, int y, Cell* cell)
 {
+    delete cellGrid[y][x];
     cellGrid[y][x] = cell;
     colorGrid[coordsToIndex(x, y)]=cell->color;
 }
@@ -41,6 +42,8 @@ void CellGrid::updateAll()
 
 Cell* CellGrid::getCell(int x, int y)
 {
+    if (x < 0 || x >= dimensions || y < 0 || y >= dimensions)
+        return nullptr;
     return cellGrid[y][x];
 }
 

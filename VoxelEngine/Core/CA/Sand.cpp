@@ -4,25 +4,39 @@
 #include "ImmovableCell.hpp"
 #include "MovableCell.hpp"
 
-Sand::Sand(glm::vec4 color) : MovableCell(color)
+Sand::Sand(glm::vec4 color) : Cell(color)
 {
+	type = MovableSolid;
 }
 
 void Sand::update(glm::vec2 position, CellGrid& grid)
 {
-	Cell* target = grid.getCell(position.x, position.y - 1);
+	Cell* target;
 
-	if (target == dynamic_cast<Vaccum*>(target));
+	target = grid.getCell(position.x, position.y - 1);
+	if (target == nullptr)
+		return;
+	if (target->type == Empty || target->type == Gas || target->type == Liquid)
 	{
 		grid.swapCells(position, { position.x, position.y - 1 });
 		return;
 	}
-	if (target == dynamic_cast<ImmovableCell*>(target));
+
+	target = grid.getCell(position.x + 1, position.y - 1);
+	if (target == nullptr)
+		return;
+	if (target->type == Empty || target->type == Gas || target->type == Liquid)
 	{
+		grid.swapCells(position, { position.x + 1, position.y - 1 });
 		return;
 	}
-	if (target == dynamic_cast<MovableCell*>(target));
+
+	target = grid.getCell(position.x - 1, position.y - 1);
+	if (target == nullptr)
+		return;
+	if (target->type == Empty || target->type == Gas || target->type == Liquid)
 	{
+		grid.swapCells(position, { position.x - 1, position.y - 1 });
 		return;
 	}
 }

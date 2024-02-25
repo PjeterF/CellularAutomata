@@ -1,9 +1,10 @@
 #include "Vaccum.hpp"
 
-glm::vec4 Vaccum::vaccumColor = { 1, 1, 1, 1 };
+glm::vec4 Vaccum::vaccumColor = { 0.94, 1, 1, 1 };
 
 Vaccum::Vaccum()
 {
+	type = Empty;
 	this->color = vaccumColor;
 }
 

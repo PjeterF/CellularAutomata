@@ -1,6 +1,8 @@
 ﻿#include "Application.hpp"
 #include "../Core/Voxel/Voxel.hpp"
 #include <vector>
+#include <chrono>
+#include <thread>
 #include <random>
 #include <glm/vec3.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,6 +11,7 @@
 #include "../Core/CA/CellGrid.hpp"
 #include "../Core/CA/Sand.hpp"
 #include "../Core/CA/Stone.hpp"
+#include "../Core/CA/Water.hpp"
 
 struct VoxelGrid
 {
@@ -26,18 +29,16 @@ CellGrid* createCellGrid1(int dimensions)
 {
 	CellGrid* grid = new CellGrid(dimensions);
 
-	for (int i = 0; i < dimensions; i++)
-	{
-		grid->insertCell(i, dimensions / 2, new Stone(0.5f));
-	}
-
+	float scale = 0.3f;
+	int width = 10;
 	for (int x = 0; x < dimensions; x++)
 	{
-		for (int y = dimensions / 2; y < dimensions / 2 + 5; y++)
+		for (int y = scale * dimensions; y < scale * dimensions + width; y++)
 		{
 			grid->insertCell(x, y, new Stone((float)(rand() % 50) / 100));
 		}
 	}
+
 	return grid;
 }
 
@@ -86,6 +87,7 @@ glm::vec4* createRandomColorGrid(int gridSize)
 		grid[i].b = (float)(rand() % 255) / 255;
 		grid[i].a = 1.0f;
 	}
+
 	return grid;
 }
 
@@ -114,9 +116,14 @@ void Application::run()
 {
 	int dimX = 125;
 	int dimY = 125;
+	
+
+	int dimensions = 125;
+	CellGrid* cellGrid = createCellGrid1(dimensions);
+
 	SSBO_data data;
-	data.gridDimensions = { dimX, dimY };
-	data.grid = createRandomColorGrid(dimX * dimY);
+	data.gridDimensions = { dimensions, dimensions };
+	data.grid = cellGrid->getColorGrid();
 
 	std::vector<float> vertices =
 	{
@@ -163,6 +170,8 @@ void Application::run()
 	ShaderProgram shad1("Core/Rendering/Shaders/first.vert", "Core/Rendering/Shaders/first.frag");
 
 	int cellSize = 8;
+	int iteration = 0;
+	bool paused = true;
 	while (!glfwWindowShouldClose(window))
 	{
 		//Rendering
@@ -187,13 +196,65 @@ void Application::run()
 
 		ImGui::Begin("Test");
 		ImGui::InputInt("CellSize", &cellSize);
+		static bool allowStep = false;
+		if (ImGui::Button("Step"))
+		{
+			allowStep = true;
+		}
+		if (ImGui::Button("Spawn sand"))
+		{
+			cellGrid->insertCell(dimensions / 2, dimensions - 1, new Sand({ 1, 0.9, 0.3, 1 }));
+		}
+		if (ImGui::Button("Spawn water"))
+		{
+			cellGrid->insertCell(dimensions / 2, dimensions - 1, new Water({ 0.25, 0.4, 0.9, 1 }));
+		}
+		ImGui::Checkbox("Paused", &paused);
 		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
+		//Logic
+		if (allowStep || !paused)
+		{
+			allowStep = false;
+
+			static int i = 6000;
+			if (i != 0)
+			{
+				i--;
+				
+				bool darken = rand() % 10;
+				float scale;
+				if (!darken)
+					scale = 0.8f;
+				else
+					scale = 1.0f;
+				if (rand() % 100 < 50)
+				{
+					cellGrid->insertCell(dimensions / 2 + rand() % 50 - 25, dimensions - 1, new Water(glm::vec4(0.1, 0.4, 0.9, 1)));
+				}
+				else
+				{
+					cellGrid->insertCell(dimensions / 2 + rand() % 50 - 25, dimensions - 1, new Sand(scale * glm::vec4( 1, 0.9, 0.3, 1 )));
+				}
+
+			}
+
+			cellGrid->updateAll();
+		}
+
+
+		data.grid = cellGrid->getColorGrid();
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4) * data.gridDimensions.x * data.gridDimensions.y, data.grid);
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
+
+		iteration++;
 	}
 
 	glfwTerminate();

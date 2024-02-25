@@ -145,6 +145,7 @@
     <ClCompile Include="Core\CA\Sand.cpp" />
     <ClCompile Include="Core\CA\Stone.cpp" />
     <ClCompile Include="Core\CA\Vaccum.cpp" />
+    <ClCompile Include="Core\CA\Water.cpp" />
     <ClCompile Include="Core\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="Core\Utility\Octree.cpp" />
     <ClCompile Include="Core\Voxel\Voxel.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Core\CA\Sand.hpp" />
     <ClInclude Include="Core\CA\Stone.hpp" />
     <ClInclude Include="Core\CA\Vaccum.hpp" />
+    <ClInclude Include="Core\CA\Water.hpp" />
     <ClInclude Include="Core\Rendering\ShaderProgram.hpp" />
     <ClInclude Include="Core\Utility\Octree.hpp" />
     <ClInclude Include="Core\Voxel\Voxel.hpp" />
