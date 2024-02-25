@@ -1,21 +1,27 @@
 #version 460
 precision highp float;
 
-layout(std430, binding = 0) buffer VoxelGrid
+layout(std140, binding = 0) buffer ColorGrid
 {
-	vec4 gridDim;
-	vec4 rgba[];
+	ivec2 gridDimensions;
+	vec4 pixelColors[];
 } grid;
 
 out vec4 finalColour;
 
-uniform vec3 camPos;
-uniform vec3 gridOrigin;
+uniform int cellSize;
+uniform vec2 viewPortSize;
 
 void main()
 {
-	ivec3 gridDimensions = ivec3(100, 100, 100);
-	int index = int(gl_FragCoord.x) % 100;
+	ivec2 convCoord;
+	convCoord.x = int(gl_FragCoord.x)/cellSize;
+	convCoord.y = int(gl_FragCoord.y)/cellSize;
 
-	finalColour = grid.rgba[index].rgba;
+	if(convCoord.x >= grid.gridDimensions.x || convCoord.y >= grid.gridDimensions.y)
+		discard;
+
+	int index = convCoord.y*grid.gridDimensions.x + convCoord.x;
+
+	finalColour = grid.pixelColors[index].rgba;
 }

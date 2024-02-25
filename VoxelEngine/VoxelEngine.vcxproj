@@ -140,6 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Core\CA\Cell.cpp" />
+    <ClCompile Include="Core\CA\CellGrid.cpp" />
+    <ClCompile Include="Core\CA\Sand.cpp" />
+    <ClCompile Include="Core\CA\Stone.cpp" />
+    <ClCompile Include="Core\CA\Vaccum.cpp" />
     <ClCompile Include="Core\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="Core\Utility\Octree.cpp" />
     <ClCompile Include="Core\Voxel\Voxel.cpp" />
@@ -155,6 +160,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.hpp" />
+    <ClInclude Include="Core\CA\Cell.hpp" />
+    <ClInclude Include="Core\CA\CellGrid.hpp" />
+    <ClInclude Include="Core\CA\ImmovableCell.hpp" />
+    <ClInclude Include="Core\CA\MovableCell.hpp" />
+    <ClInclude Include="Core\CA\Sand.hpp" />
+    <ClInclude Include="Core\CA\Stone.hpp" />
+    <ClInclude Include="Core\CA\Vaccum.hpp" />
     <ClInclude Include="Core\Rendering\ShaderProgram.hpp" />
     <ClInclude Include="Core\Utility\Octree.hpp" />
     <ClInclude Include="Core\Voxel\Voxel.hpp" />

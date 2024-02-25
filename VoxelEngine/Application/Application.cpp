@@ -6,23 +6,44 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../Core/Rendering/ShaderProgram.hpp"
 
+#include "../Core/CA/CellGrid.hpp"
+#include "../Core/CA/Sand.hpp"
+#include "../Core/CA/Stone.hpp"
+
 struct VoxelGrid
 {
-	glm::vec3 gridOrigin;
 	glm::ivec3 gridDimensions;
 	std::vector<Voxel> voxels;
 };
 
 struct SSBO_data
 {
-	glm::vec4 gridDimensions;
+	glm::ivec2 gridDimensions;
 	glm::vec4* grid;
 };
+
+CellGrid* createCellGrid1(int dimensions)
+{
+	CellGrid* grid = new CellGrid(dimensions);
+
+	for (int i = 0; i < dimensions; i++)
+	{
+		grid->insertCell(i, dimensions / 2, new Stone(0.5f));
+	}
+
+	for (int x = 0; x < dimensions; x++)
+	{
+		for (int y = dimensions / 2; y < dimensions / 2 + 5; y++)
+		{
+			grid->insertCell(x, y, new Stone((float)(rand() % 50) / 100));
+		}
+	}
+	return grid;
+}
 
 VoxelGrid createRandomVoxelGrid(int x, int y, int z)
 {
 	VoxelGrid grid;
-	grid.gridOrigin = { 0, 0, 0 };
 	grid.gridDimensions = { x, y, z };
 
 	int size = x * y * z;
@@ -33,7 +54,7 @@ VoxelGrid createRandomVoxelGrid(int x, int y, int z)
 		if (rand() % 2)
 			grid.voxels[i].rgba = { 1 ,1, 1, 1 };
 		else
-			grid.voxels[i].rgba = { 0 ,1, 0, 1 };
+			grid.voxels[i].rgba = { 1 ,0, 0, 1 };
 	}
 
 	return grid;
@@ -55,8 +76,24 @@ glm::vec4* createRandomVoxelGrid2(int x, int y, int z)
 	return grid;
 }
 
+glm::vec4* createRandomColorGrid(int gridSize)
+{
+	glm::vec4* grid = new glm::vec4[gridSize];
+	for (int i = 0; i < gridSize; i++)
+	{
+		grid[i].r = (float)(rand() % 255) / 255;
+		grid[i].g = (float)(rand() % 255) / 255;
+		grid[i].b = (float)(rand() % 255) / 255;
+		grid[i].a = 1.0f;
+	}
+	return grid;
+}
+
 Application::Application(int wnd_width, int wnd_height)
 {
+	this->wndSize = { wnd_width, wnd_height };
+	this->viewPortSize = { wnd_width, wnd_height };
+
 	srand(time(0));
 
 	glfwInit();
@@ -75,20 +112,11 @@ Application::Application(int wnd_width, int wnd_height)
 
 void Application::run()
 {
-	std::cout << sizeof(VoxelGrid::gridOrigin)<<"\n";
-	std::cout << sizeof(VoxelGrid::gridDimensions)<<"\n";
-	std::cout << sizeof(VoxelGrid::voxels)<<"\n";
-	std::cout << sizeof(VoxelGrid)<<"\n";
-	std::cout << sizeof(Voxel)<<"\n";
-
-	glm::ivec3 gridDim = { 100, 100, 100 };
-	int gridSize = gridDim.x * gridDim.y * gridDim.z;
-	VoxelGrid grid = createRandomVoxelGrid(gridDim.x, gridDim.y, gridDim.z);
-	glm::vec4* grid2 = createRandomVoxelGrid2(gridDim.x, gridDim.y, gridDim.z);
-
+	int dimX = 125;
+	int dimY = 125;
 	SSBO_data data;
-	data.gridDimensions = { gridDim.x, gridDim.y, gridDim.z, 1.0f };
-	data.grid = grid2;
+	data.gridDimensions = { dimX, dimY };
+	data.grid = createRandomColorGrid(dimX * dimY);
 
 	std::vector<float> vertices =
 	{
@@ -103,9 +131,6 @@ void Application::run()
 		0, 1, 2,
 		0, 3, 2
 	};
-
-	/*for (int i = 0; i < gridSize; i++)
-		std::cout << grid2[i].x << "\n";*/
 
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
@@ -126,32 +151,46 @@ void Application::run()
 	GLuint ssbo;
 	glGenBuffers(1, &ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) + sizeof(glm::vec4) * gridSize, nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4) + sizeof(glm::vec4) * data.gridDimensions.x * data.gridDimensions.y, nullptr, GL_DYNAMIC_DRAW);
+
 	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(glm::vec4), &data.gridDimensions);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4) * gridSize, data.grid);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4) * data.gridDimensions.x * data.gridDimensions.y, data.grid);
+
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
 
 	glBindVertexArray(0);
 
 	ShaderProgram shad1("Core/Rendering/Shaders/first.vert", "Core/Rendering/Shaders/first.frag");
 
+	int cellSize = 8;
 	while (!glfwWindowShouldClose(window))
 	{
+		//Rendering
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shad1.bind();
 
-		GLint camPosLoc = glGetUniformLocation(shad1.getId(), "camPos");
-		glUniform3f(camPosLoc, 0.0f, 0.0f, 5.0f);
+		GLint viewPortSizeLoc = glGetUniformLocation(shad1.getId(), "viewPortSize");
+		glUniform2i(viewPortSizeLoc, 0, 0);
 
-		GLint gridOriginLoc = glGetUniformLocation(shad1.getId(), "gridOrigin");
-		glUniform3f(gridOriginLoc, 0.0f, 0.0f, 0.0f);
+		GLint cellSizeLoc = glGetUniformLocation(shad1.getId(), "cellSize");
+		glUniform1i(cellSizeLoc, cellSize);
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		runUI();
+		//UI
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Test");
+		ImGui::InputInt("CellSize", &cellSize);
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
