@@ -1,9 +1,11 @@
 #pragma once
 #include "Cell.hpp"
 
-class MovableCell : public Cell
+class MovableSolid : public Cell
 {
 public:
-	MovableCell(glm::vec4 color) : Cell(color) {}
+	MovableSolid(glm::vec4 color);
 	virtual void update(glm::vec2 position, CellGrid& grid) = 0;
+
+	float downwardsVelocity = 0;
 };

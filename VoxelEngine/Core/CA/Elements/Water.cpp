@@ -1,9 +1,9 @@
 #include "Water.hpp"
-#include "CellGrid.hpp"
+#include "../CellGrid.hpp"
 
-Water::Water(glm::vec4 color) : Cell(color)
+Water::Water(glm::vec4 color) : Liquid(color)
 {
-	type = Liquid;
+
 }
 
 void Water::update(glm::vec2 position, CellGrid& grid)

@@ -1,7 +1,7 @@
 #pragma once
-#include "ImmovableCell.hpp"
+#include "../ImmovableSolid.hpp"
 
-class Stone : public Cell
+class Stone : public ImmovableSolid
 {
 public:
 	Stone(float hue);

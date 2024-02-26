@@ -13,8 +13,15 @@ public:
 	Cell* getCell(int x, int y);
 	void swapCells(glm::vec2 pos1, glm::vec2 pos2);
 	glm::vec4* getColorGrid();
+
+
 	std::vector<std::vector<Cell*>> cellGrid;
 private:
+	enum Direction
+	{
+		Up, Down, Left, Right
+	};
+	glm::ivec2 lookForEmptyCell(glm::ivec2 start, int searchDistance, Direction direction);
 	int coordsToIndex(int x, int y);
 
 	float dimensions;

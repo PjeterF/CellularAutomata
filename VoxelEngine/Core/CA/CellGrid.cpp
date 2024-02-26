@@ -1,5 +1,5 @@
 #include "CellGrid.hpp"
-#include "Vaccum.hpp"
+#include "Elements/Vaccum.hpp"
 
 CellGrid::CellGrid(int dimensions)
 {
@@ -60,6 +60,41 @@ void CellGrid::swapCells(glm::vec2 pos1, glm::vec2 pos2)
 glm::vec4* CellGrid::getColorGrid()
 {
     return &colorGrid[0];
+}
+
+glm::ivec2 CellGrid::lookForEmptyCell(glm::ivec2 start, int searchDistance, Direction direction)
+{
+    glm::ivec2 offsetVec  = { 0, 0 };
+    switch (direction)
+    {
+    case CellGrid::Up:
+        offsetVec = { 0, 1 };
+        break;
+    case CellGrid::Down:
+        offsetVec = { 0, -1 };
+        break;
+    case CellGrid::Left:
+        offsetVec = { -1, 0 };
+        break;
+    case CellGrid::Right:
+        offsetVec = { -1, 0 };
+        break;
+    default:
+        break;
+    }
+
+    glm::ivec2 returnOffset = { 0, 0 };
+    for (int i = 0; i < searchDistance; i++)
+    {
+        Cell* target = getCell(start.x + offsetVec.x, start.y + offsetVec.y);
+        if (target == nullptr)
+            break;
+        if (target->type == Empty)
+            returnOffset = returnOffset + offsetVec;
+        else
+            break;
+    }
+    return returnOffset;
 }
 
 int CellGrid::coordsToIndex(int x, int y)

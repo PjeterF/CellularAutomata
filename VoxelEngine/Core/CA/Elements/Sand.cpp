@@ -1,17 +1,22 @@
 #include "Sand.hpp"
-#include "CellGrid.hpp"
+#include "../CellGrid.hpp"
 #include "Vaccum.hpp"
-#include "ImmovableCell.hpp"
-#include "MovableCell.hpp"
+#include "../ImmovableSolid.hpp"
+#include "../MovableSolid.hpp"
 
-Sand::Sand(glm::vec4 color) : Cell(color)
+Sand::Sand(glm::vec4 color) : MovableSolid(color)
 {
-	type = MovableSolid;
+
 }
 
 void Sand::update(glm::vec2 position, CellGrid& grid)
 {
 	Cell* target;
+
+	for (int i = 0; i < this->downwardsVelocity; i++)
+	{
+		target = grid.getCell(position.x, position.y - 1 - i);
+	}
 
 	target = grid.getCell(position.x, position.y - 1);
 	if (target == nullptr)

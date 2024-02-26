@@ -1,9 +1,9 @@
 #pragma once
-#include "Cell.hpp"
+#include "../MovableSolid.hpp"
 
-class Water : public Cell
+class Sand : public MovableSolid
 {
 public:
-	Water(glm::vec4 color);
+	Sand(glm::vec4 color);
 	virtual void update(glm::vec2 position, CellGrid& grid) override;
 };

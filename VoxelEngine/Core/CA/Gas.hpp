@@ -1,9 +1,9 @@
 #pragma once
 #include "Cell.hpp"
 
-class ImmovableCell : public Cell
+class Gas : public Cell
 {
 public:
-	ImmovableCell(glm::vec4 color) : Cell(color) {}
+	Gas(glm::vec4 color);
 	virtual void update(glm::vec2 position, CellGrid& grid) = 0;
 };

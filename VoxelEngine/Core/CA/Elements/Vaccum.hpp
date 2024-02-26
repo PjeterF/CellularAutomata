@@ -1,5 +1,5 @@
 #pragma once
-#include "Cell.hpp"
+#include "../Cell.hpp"
 
 class Vaccum : public Cell
 {

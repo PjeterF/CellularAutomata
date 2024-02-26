@@ -9,9 +9,9 @@
 #include "../Core/Rendering/ShaderProgram.hpp"
 
 #include "../Core/CA/CellGrid.hpp"
-#include "../Core/CA/Sand.hpp"
-#include "../Core/CA/Stone.hpp"
-#include "../Core/CA/Water.hpp"
+#include "../Core/CA/Elements/Sand.hpp"
+#include "../Core/CA/Elements/Stone.hpp"
+#include "../Core/CA/Elements/Water.hpp"
 
 struct VoxelGrid
 {

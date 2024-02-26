@@ -57,19 +57,31 @@
     <ClCompile Include="Core\CA\CellGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\CA\Stone.cpp">
+    <ClCompile Include="Core\CA\Elements\Stone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\CA\Cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\CA\Sand.cpp">
+    <ClCompile Include="Core\CA\Elements\Sand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\CA\Vaccum.cpp">
+    <ClCompile Include="Core\CA\Elements\Vaccum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\CA\Water.cpp">
+    <ClCompile Include="Core\CA\Elements\Water.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CA\Gas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CA\Liquid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CA\MovableSolid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CA\ImmovableSolid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,22 +131,28 @@
     <ClInclude Include="Core\CA\Cell.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CA\Stone.hpp">
+    <ClInclude Include="Core\CA\Elements\Stone.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CA\ImmovableCell.hpp">
+    <ClInclude Include="Core\CA\ImmovableSolid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CA\MovableCell.hpp">
+    <ClInclude Include="Core\CA\MovableSolid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CA\Sand.hpp">
+    <ClInclude Include="Core\CA\Elements\Sand.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CA\Vaccum.hpp">
+    <ClInclude Include="Core\CA\Elements\Vaccum.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CA\Water.hpp">
+    <ClInclude Include="Core\CA\Elements\Water.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CA\Gas.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CA\Liquid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
