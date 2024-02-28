@@ -29,9 +29,9 @@ glm::ivec2 MovableSolid::validDownwardsPos(glm::ivec2 startPos, CellGrid& grid)
 glm::ivec2 MovableSolid::validHorizontalPos(glm::ivec2 startPos, CellGrid& grid, bool right)
 {
 	Cell* target = nullptr;
-	int offset = 1;
-	if (!right)
-		offset = -1;
+	int offset = -1;
+	if (right)
+		offset = 1;
 
 	startPos.y -= 1;
 	for (int i = 0; i < downwardsVelocity * horizontalScale; i++)
