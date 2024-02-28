@@ -10,36 +10,18 @@ Sand::Sand(glm::vec4 color) : MovableSolid(color)
 
 }
 
-void Sand::update(glm::vec2 position, CellGrid& grid)
+void Sand::update(glm::ivec2 position, CellGrid& grid)
 {
 	Cell* target = nullptr;
 	glm::ivec2 targetPos = position;
 
-	for (int i = 0; i < this->downwardsVelocity; i++)
-	{
-		target = grid.getCell(position.x, position.y - 1 - i);
-		targetPos = { position.x, position.y - 1 - i };
-		if (target == nullptr)
-		{
-			target = grid.getCell(position.x, position.y - i);
-			targetPos = { position.x, position.y - i };
-			break;
-		}
-		if (!(target->type == Empty || target->type == Gas || target->type == Liquid))
-		{
-			target = grid.getCell(position.x, position.y - i);
-			targetPos = { position.x, position.y - i };
-			break;
-		}
-	}
-
 	this->downwardsVelocity = std::min(this->downwardsVelocity + velIncrease, maxVel);
 
-	if (target == nullptr)
-		return;
-	if (target->type == Empty || target->type == Gas || target->type == Liquid)
+	auto tPos = validDownwardsPos(position, grid);
+
+	if (tPos != position)
 	{
-		grid.swapCells(position, targetPos);
+		grid.swapCells(position, tPos);
 		return;
 	}
 

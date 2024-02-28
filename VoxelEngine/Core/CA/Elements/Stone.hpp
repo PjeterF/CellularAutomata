@@ -5,5 +5,5 @@ class Stone : public ImmovableSolid
 {
 public:
 	Stone(float hue);
-	virtual void update(glm::vec2 position, CellGrid& grid);
+	virtual void update(glm::ivec2 position, CellGrid& grid);
 };

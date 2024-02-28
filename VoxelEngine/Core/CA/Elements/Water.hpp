@@ -5,7 +5,7 @@ class Water : public Liquid
 {
 public:
 	Water(glm::vec4 color);
-	virtual void update(glm::vec2 position, CellGrid& grid) override;
+	virtual void update(glm::ivec2 position, CellGrid& grid) override;
 
 	int maxDistanceToMove = 5;
 };

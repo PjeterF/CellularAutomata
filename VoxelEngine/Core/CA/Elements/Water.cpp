@@ -6,7 +6,7 @@ Water::Water(glm::vec4 color) : Liquid(color)
 
 }
 
-void Water::update(glm::vec2 position, CellGrid& grid)
+void Water::update(glm::ivec2 position, CellGrid& grid)
 {
 	Cell* target;
 

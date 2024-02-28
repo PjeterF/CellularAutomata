@@ -8,6 +8,6 @@ Vaccum::Vaccum()
 	this->color = vaccumColor;
 }
 
-void Vaccum::update(glm::vec2 position, CellGrid& grid)
+void Vaccum::update(glm::ivec2 position, CellGrid& grid)
 {
 }
