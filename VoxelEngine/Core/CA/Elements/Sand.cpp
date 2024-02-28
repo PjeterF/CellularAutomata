@@ -13,7 +13,7 @@ Sand::Sand(glm::vec4 color) : MovableSolid(color)
 void Sand::update(glm::vec2 position, CellGrid& grid)
 {
 	static float velIncrease = 0.5f;
-	static float maxVel = 5.0f;
+	static float maxVel = 2.0f;
 	static float frictionScale = 0.5f;
 	Cell* target = nullptr;
 	glm::ivec2 targetPos = position;
@@ -38,6 +38,8 @@ void Sand::update(glm::vec2 position, CellGrid& grid)
 
 	this->downwardsVelocity = std::min(this->downwardsVelocity + velIncrease, maxVel);
 
+	if (target == nullptr)
+		return;
 	if (target->type == Empty || target->type == Gas || target->type == Liquid)
 	{
 		grid.swapCells(position, targetPos);

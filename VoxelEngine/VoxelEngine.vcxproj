@@ -24,6 +24,7 @@
     <ProjectGuid>{40903e9d-f531-4d90-b9d7-e765a99f351b}</ProjectGuid>
     <RootNamespace>VoxelEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>CA</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
