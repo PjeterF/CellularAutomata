@@ -89,7 +89,7 @@ glm::ivec2 CellGrid::lookForEmptyCell(glm::ivec2 start, int searchDistance, Dire
         Cell* target = getCell(start.x + offsetVec.x, start.y + offsetVec.y);
         if (target == nullptr)
             break;
-        if (target->type == Empty)
+        if (target->type == CellType::Empty)
             returnOffset = returnOffset + offsetVec;
         else
             break;

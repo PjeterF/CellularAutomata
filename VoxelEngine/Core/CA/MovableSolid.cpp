@@ -20,7 +20,7 @@ glm::ivec2 MovableSolid::validDownwardsPos(glm::ivec2 startPos, CellGrid& grid)
 		target = grid.getCell(startPos.x, startPos.y);
 		if (target == nullptr)
 			return { startPos.x, startPos.y + 1 };
-		if (!(target->type == Empty || target->type == Gas || target->type == Liquid))
+		if (!(target->type == CellType::Empty || target->type == CellType::Gas || target->type == CellType::Liquid))
 			return { startPos.x, startPos.y + 1 };
 	}
 	return startPos;
@@ -29,19 +29,30 @@ glm::ivec2 MovableSolid::validDownwardsPos(glm::ivec2 startPos, CellGrid& grid)
 glm::ivec2 MovableSolid::validHorizontalPos(glm::ivec2 startPos, CellGrid& grid, bool right)
 {
 	Cell* target = nullptr;
+	glm::ivec2 currentPos = startPos;
 	int offset = -1;
 	if (right)
 		offset = 1;
 
-	startPos.y -= 1;
+	currentPos.y -= 1;
 	for (int i = 0; i < downwardsVelocity * horizontalScale; i++)
 	{
-		startPos.x += offset;
-		target = grid.getCell(startPos.x, startPos.y);
+		currentPos.x += offset;
+		target = grid.getCell(currentPos.x, currentPos.y);
 		if (target == nullptr)
-			return { startPos.x - offset, startPos.y };
-		if (!(target->type == Empty || target->type == Gas || target->type == Liquid))
-			return { startPos.x - offset, startPos.y };
+		{
+			if (currentPos.x - offset == startPos.x)
+				return startPos;
+			else
+				return { currentPos.x - offset, currentPos.y };
+		}
+		if (!(target->type == CellType::Empty || target->type == CellType::Gas || target->type == CellType::Liquid))
+		{
+			if (currentPos.x - offset == startPos.x)
+				return startPos;
+			else
+				return { currentPos.x - offset, currentPos.y };
+		}
 	}
-	return startPos;
+	return currentPos;
 }

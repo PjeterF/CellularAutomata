@@ -13,7 +13,7 @@ void Water::update(glm::ivec2 position, CellGrid& grid)
 	target = grid.getCell(position.x, position.y - 1);
 	if (target == nullptr)
 		return;
-	if (target->type == Empty || target->type == Gas)
+	if (target->type == CellType::Empty || target->type == CellType::Gas)
 	{
 		grid.swapCells(position, { position.x, position.y - 1 });
 		return;
@@ -28,7 +28,7 @@ void Water::update(glm::ivec2 position, CellGrid& grid)
 	target = grid.getCell(position.x + direction, position.y);
 	if (target == nullptr)
 		return;
-	if (target->type == Empty || target->type == Gas)
+	if (target->type == CellType::Empty || target->type == CellType::Gas)
 	{
 		grid.swapCells(position, { position.x + direction, position.y});
 		return;

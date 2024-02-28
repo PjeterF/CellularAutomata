@@ -12,7 +12,7 @@ public:
 	const static float velIncrease;
 	const static float maxVel;
 	const static float frictionScale;
-	const static float horizontalScale;;
+	const static float horizontalScale;
 protected:
 	glm::ivec2 validDownwardsPos(glm::ivec2 startPos, CellGrid& grid);
 	glm::ivec2 validHorizontalPos(glm::ivec2 startPos, CellGrid& grid, bool right);
