@@ -254,8 +254,11 @@ void Application::run()
 			glm::vec2 cursorPos = GLFWInputManager::getInstance().getCursorPos();
 			cursorPos =  (1.0f/cellSize) * cursorPos;
 			if (cellGrid->getCell(cursorPos.x, cursorPos.y) != nullptr)
-				cellGrid->insertCell(cursorPos.x, cursorPos.y, new Acid(glm::vec4(0, 0.9, 0.3, 1)));
+			{
+				cellGrid->insertSquare(cursorPos, Element::Acid, 10);
+				//cellGrid->insertCell(cursorPos.x, cursorPos.y, new Acid(glm::vec4(0, 0.9, 0.3, 1)));
 				//cellGrid->insertCell(cursorPos.x, cursorPos.y, new Sand(glm::vec4(1, 0.9, 0.3, 1)));
+			}
 		}
 
 		glfwSwapBuffers(window);

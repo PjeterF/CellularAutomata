@@ -1,5 +1,9 @@
 #include "CellGrid.hpp"
 #include "Elements/Vaccum.hpp"
+#include "Elements/Water.hpp"
+#include "Elements/Sand.hpp"
+#include "Elements/Stone.hpp"
+#include "Elements/Acid.hpp"
 
 CellGrid::CellGrid(int dimensions)
 {
@@ -33,6 +37,39 @@ void CellGrid::insertCell(glm::ivec2 pos, Cell* cell)
     delete cellGrid[pos.y][pos.x];
     cellGrid[pos.y][pos.x] = cell;
     colorGrid[coordsToIndex(pos.x, pos.y)] = cell->color;
+}
+
+void CellGrid::insertSquare(glm::ivec2 pos, Element element, int radius)
+{
+    if (pos.y + radius >= dimensions - 1)
+        radius = dimensions - 1 - pos.y;
+    if (pos.x + radius >= dimensions - 1)
+        radius = dimensions - pos.x;
+
+    for (int x = 0; x < radius; x++)
+    {
+        for (int y = 0; y < radius; y++)
+        {
+            switch (element)
+            {
+            case Element::Vaccum:
+                insertCell(pos.x + x, pos.y + y, new Vaccum());
+                break;
+            case Element::Water:
+                insertCell(pos.x + x, pos.y + y, new Water({ 0.1, 0.4, 0.9, 1 }));
+                break;
+            case Element::Sand:
+                insertCell(pos.x + x, pos.y + y, new Sand({ 1, 0.9, 0.3, 1 }));
+                break;
+            case Element::Stone:
+                insertCell(pos.x + x, pos.y + y, new Stone(0.5));
+                break;
+            case Element::Acid:
+                insertCell(pos.x + x, pos.y + y, new Acid({ 0.1, 0.9, 0.4, 1 }));
+                break;
+            }
+        }
+    }
 }
 
 void CellGrid::updateAll()

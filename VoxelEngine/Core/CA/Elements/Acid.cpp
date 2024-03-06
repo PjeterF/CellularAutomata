@@ -5,6 +5,7 @@
 Acid::Acid(glm::vec4 color) : Liquid(color)
 {
 	this->acidResistance = 1000;
+	this->dispersionRate = 10.0f;
 }
 
 void Acid::update(glm::ivec2 position, CellGrid& grid)

@@ -8,13 +8,15 @@ class CellGrid
 {
 public:
 	CellGrid(int dimensions);
+
 	void insertCell(int x, int y, Cell* cell);
 	void insertCell(glm::ivec2 pos, Cell* cell);
+	void insertSquare(glm::ivec2 pos, Element element, int radius);
+
 	void updateAll();
 	Cell* getCell(int x, int y);
 	void swapCells(glm::vec2 pos1, glm::vec2 pos2);
 	glm::vec4* getColorGrid();
-
 
 	std::vector<std::vector<Cell*>> cellGrid;
 private:
@@ -25,7 +27,7 @@ private:
 	glm::ivec2 lookForEmptyCell(glm::ivec2 start, int searchDistance, Direction direction);
 	int coordsToIndex(int x, int y);
 
-	float dimensions;
+	int dimensions;
 
 	std::vector<glm::vec4> colorGrid;
 	friend class Cell;

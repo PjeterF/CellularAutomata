@@ -14,6 +14,15 @@ enum class CellType
 	Liquid
 };
 
+enum class Element
+{
+	Vaccum,
+	Water,
+	Sand,
+	Stone,
+	Acid
+};
+
 class Cell
 {
 public:
