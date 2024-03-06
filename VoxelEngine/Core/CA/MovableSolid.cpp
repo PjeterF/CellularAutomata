@@ -2,7 +2,7 @@
 #include "CellGrid.hpp"
 
 const float MovableSolid::velIncrease = 0.5f;
-const float MovableSolid::maxVel = 3.0f;
+const float MovableSolid::maxVel = 10.0f;
 const float MovableSolid::frictionScale = 0.5f;
 const float MovableSolid::horizontalScale = 0.5f;
 

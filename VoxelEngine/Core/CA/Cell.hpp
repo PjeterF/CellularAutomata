@@ -21,4 +21,5 @@ public:
 	virtual void update(glm::ivec2 position, CellGrid& grid) = 0;
 	glm::vec4 color;
 	CellType type = CellType::NoType;
+	int acidResistance = 1;
 };

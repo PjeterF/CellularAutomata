@@ -7,7 +7,7 @@ public:
 	MovableSolid(glm::vec4 color);
 	virtual void update(glm::ivec2 position, CellGrid& grid) = 0;
 
-	float downwardsVelocity = 3.0f;
+	float downwardsVelocity = 1.0f;
 
 	const static float velIncrease;
 	const static float maxVel;

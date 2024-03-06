@@ -15,12 +15,11 @@ void Sand::update(glm::ivec2 position, CellGrid& grid)
 	Cell* target = nullptr;
 	glm::ivec2 targetPos = position;
 
-	this->downwardsVelocity = std::min(this->downwardsVelocity + velIncrease, maxVel);
-
 	targetPos = validDownwardsPos(position, grid);
 	if (targetPos != position)
 	{
 		grid.swapCells(position, targetPos);
+		this->downwardsVelocity = std::min(this->downwardsVelocity + velIncrease, maxVel);
 		return;
 	}
 
@@ -28,6 +27,7 @@ void Sand::update(glm::ivec2 position, CellGrid& grid)
 	if (targetPos != position)
 	{
 		grid.swapCells(position, targetPos);
+		this->downwardsVelocity = this->downwardsVelocity * this->frictionScale;
 		return;
 	}
 }

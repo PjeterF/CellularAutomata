@@ -143,6 +143,7 @@
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Core\CA\Cell.cpp" />
     <ClCompile Include="Core\CA\CellGrid.cpp" />
+    <ClCompile Include="Core\CA\Elements\Acid.cpp" />
     <ClCompile Include="Core\CA\Gas.cpp" />
     <ClCompile Include="Core\CA\ImmovableSolid.cpp" />
     <ClCompile Include="Core\CA\Liquid.cpp" />
@@ -151,6 +152,8 @@
     <ClCompile Include="Core\CA\Elements\Stone.cpp" />
     <ClCompile Include="Core\CA\Elements\Vaccum.cpp" />
     <ClCompile Include="Core\CA\Elements\Water.cpp" />
+    <ClCompile Include="Core\Input\InputMap.cpp" />
+    <ClCompile Include="Core\Input\Windows\GLFWInputManager.cpp" />
     <ClCompile Include="Core\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="Core\Utility\Octree.cpp" />
     <ClCompile Include="Core\Voxel\Voxel.cpp" />
@@ -168,6 +171,7 @@
     <ClInclude Include="Application\Application.hpp" />
     <ClInclude Include="Core\CA\Cell.hpp" />
     <ClInclude Include="Core\CA\CellGrid.hpp" />
+    <ClInclude Include="Core\CA\Elements\Acid.hpp" />
     <ClInclude Include="Core\CA\Gas.hpp" />
     <ClInclude Include="Core\CA\ImmovableSolid.hpp" />
     <ClInclude Include="Core\CA\Liquid.hpp" />
@@ -176,6 +180,10 @@
     <ClInclude Include="Core\CA\Elements\Stone.hpp" />
     <ClInclude Include="Core\CA\Elements\Vaccum.hpp" />
     <ClInclude Include="Core\CA\Elements\Water.hpp" />
+    <ClInclude Include="Core\Input\InputManager.hpp" />
+    <ClInclude Include="Core\Input\InputMap.hpp" />
+    <ClInclude Include="Core\Input\keyCodes.h" />
+    <ClInclude Include="Core\Input\Windows\GLFWInputManager.hpp" />
     <ClInclude Include="Core\Rendering\ShaderProgram.hpp" />
     <ClInclude Include="Core\Utility\Octree.hpp" />
     <ClInclude Include="Core\Voxel\Voxel.hpp" />

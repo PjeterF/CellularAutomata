@@ -9,6 +9,7 @@ class CellGrid
 public:
 	CellGrid(int dimensions);
 	void insertCell(int x, int y, Cell* cell);
+	void insertCell(glm::ivec2 pos, Cell* cell);
 	void updateAll();
 	Cell* getCell(int x, int y);
 	void swapCells(glm::vec2 pos1, glm::vec2 pos2);

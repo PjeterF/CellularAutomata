@@ -28,6 +28,13 @@ void CellGrid::insertCell(int x, int y, Cell* cell)
     colorGrid[coordsToIndex(x, y)]=cell->color;
 }
 
+void CellGrid::insertCell(glm::ivec2 pos, Cell* cell)
+{
+    delete cellGrid[pos.y][pos.x];
+    cellGrid[pos.y][pos.x] = cell;
+    colorGrid[coordsToIndex(pos.x, pos.y)] = cell->color;
+}
+
 void CellGrid::updateAll()
 {
     for (int y = 0; y < dimensions; y++)

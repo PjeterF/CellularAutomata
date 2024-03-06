@@ -12,6 +12,7 @@
 #include "../Core/CA/Elements/Sand.hpp"
 #include "../Core/CA/Elements/Stone.hpp"
 #include "../Core/CA/Elements/Water.hpp"
+#include "../Core/CA/Elements/Acid.hpp"
 
 struct VoxelGrid
 {
@@ -34,6 +35,15 @@ CellGrid* createCellGrid1(int dimensions)
 	for (int x = 0; x < dimensions; x++)
 	{
 		for (int y = scale * dimensions; y < scale * dimensions + width; y++)
+		{
+			if(x % 20 > 10)
+				grid->insertCell(x, y, new Stone((float)(rand() % 50) / 100));
+		}
+	}
+
+	for (int x = 0; x < dimensions; x++)
+	{
+		for (int y = 0; y < 5 + width; y++)
 		{
 			grid->insertCell(x, y, new Stone((float)(rand() % 50) / 100));
 		}
@@ -104,6 +114,8 @@ Application::Application(int wnd_width, int wnd_height)
 	gladLoadGL();
 	glViewport(0, 0, wnd_width, wnd_height);
 
+	GLFWInputManager::initialize(window);
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -114,10 +126,6 @@ Application::Application(int wnd_width, int wnd_height)
 
 void Application::run()
 {
-	int dimX = 125;
-	int dimY = 125;
-	
-
 	int dimensions = 125;
 	CellGrid* cellGrid = createCellGrid1(dimensions);
 
@@ -201,11 +209,11 @@ void Application::run()
 		{
 			allowStep = true;
 		}
-		if (ImGui::Button("Spawn sand"))
+		if (ImGui::Button("Sand"))
 		{
 			cellGrid->insertCell(dimensions / 2, dimensions - 1, new Sand({ 1, 0.9, 0.3, 1 }));
 		}
-		if (ImGui::Button("Spawn water"))
+		if (ImGui::Button("Water"))
 		{
 			cellGrid->insertCell(dimensions / 2, dimensions - 1, new Water({ 0.25, 0.4, 0.9, 1 }));
 		}
@@ -219,27 +227,19 @@ void Application::run()
 		if (allowStep || !paused)
 		{
 			allowStep = false;
-
-			static int i = 6000;
-			if (i != 0)
+			bool darken = rand() % 10;
+			float scale;
+			if (!darken)
+				scale = 0.8f;
+			else
+				scale = 1.0f;
+			if (rand() % 100 < 50)
 			{
-				i--;
-				
-				bool darken = rand() % 10;
-				float scale;
-				if (!darken)
-					scale = 0.8f;
-				else
-					scale = 1.0f;
-				if (rand() % 100 < 50)
-				{
-					cellGrid->insertCell(dimensions / 2 + rand() % 50 - 25, dimensions - 1, new Water(glm::vec4(0.1, 0.4, 0.9, 1)));
-				}
-				else
-				{
-					cellGrid->insertCell(dimensions / 2 + rand() % 50 - 25, dimensions - 1, new Sand(scale * glm::vec4( 1, 0.9, 0.3, 1 )));
-				}
-
+				cellGrid->insertCell(dimensions / 2 + rand() % dimensions/2 - dimensions/4, dimensions - 1, new Water(glm::vec4(0.1, 0.4, 0.9, 1)));
+			}
+			else
+			{
+				cellGrid->insertCell(dimensions / 2 + rand() % dimensions / 2 - dimensions / 4, dimensions - 1, new Sand(scale * glm::vec4( 1, 0.9, 0.3, 1 )));
 			}
 
 			cellGrid->updateAll();
@@ -249,10 +249,19 @@ void Application::run()
 		data.grid = cellGrid->getColorGrid();
 		glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4) * data.gridDimensions.x * data.gridDimensions.y, data.grid);
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		if (GLFWInputManager::getInstance().mouseKeyDown[ZE_MOUSE_BUTTON_1])
+		{
+			glm::vec2 cursorPos = GLFWInputManager::getInstance().getCursorPos();
+			cursorPos =  (1.0f/cellSize) * cursorPos;
+			if (cellGrid->getCell(cursorPos.x, cursorPos.y) != nullptr)
+				cellGrid->insertCell(cursorPos.x, cursorPos.y, new Acid(glm::vec4(0, 0.9, 0.3, 1)));
+				//cellGrid->insertCell(cursorPos.x, cursorPos.y, new Sand(glm::vec4(1, 0.9, 0.3, 1)));
+		}
 
-		std::this_thread::sleep_for(std::chrono::microseconds(100));
+		glfwSwapBuffers(window);
+		GLFWInputManager::getInstance().update();
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
 		iteration++;
 	}

@@ -3,34 +3,25 @@
 
 Water::Water(glm::vec4 color) : Liquid(color)
 {
-
+	this->dispersionRate = 2.0f;
 }
 
 void Water::update(glm::ivec2 position, CellGrid& grid)
 {
-	Cell* target;
+	Cell* target = nullptr;
+	glm::ivec2 targetPos = position;
 
-	target = grid.getCell(position.x, position.y - 1);
-	if (target == nullptr)
-		return;
-	if (target->type == CellType::Empty || target->type == CellType::Gas)
+	targetPos = validDownwardsPos(position, grid);
+	if (targetPos != position)
 	{
-		grid.swapCells(position, { position.x, position.y - 1 });
+		grid.swapCells(position, targetPos);
 		return;
 	}
 
-	int direction;
-	if (rand() % 2)
-		direction = 1;
-	else
-		direction = -1;
-
-	target = grid.getCell(position.x + direction, position.y);
-	if (target == nullptr)
-		return;
-	if (target->type == CellType::Empty || target->type == CellType::Gas)
+	targetPos = validHorizontalPos(position, grid, rand() % 2);
+	if (targetPos != position)
 	{
-		grid.swapCells(position, { position.x + direction, position.y});
+		grid.swapCells(position, targetPos);
 		return;
 	}
 }
