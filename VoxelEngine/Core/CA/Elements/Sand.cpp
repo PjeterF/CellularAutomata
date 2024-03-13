@@ -7,7 +7,7 @@
 
 Sand::Sand(glm::vec4 color) : MovableSolid(color)
 {
-
+	
 }
 
 void Sand::update(glm::ivec2 position, CellGrid& grid)

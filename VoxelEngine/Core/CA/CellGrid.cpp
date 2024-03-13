@@ -4,6 +4,7 @@
 #include "Elements/Sand.hpp"
 #include "Elements/Stone.hpp"
 #include "Elements/Acid.hpp"
+#include "Elements/Metal.hpp"
 
 CellGrid::CellGrid(int dimensions)
 {
@@ -39,7 +40,7 @@ void CellGrid::insertCell(glm::ivec2 pos, Cell* cell)
     colorGrid[coordsToIndex(pos.x, pos.y)] = cell->color;
 }
 
-void CellGrid::insertSquare(glm::ivec2 pos, Element element, int radius)
+void CellGrid::insertSquare(glm::ivec2 pos, Element element, int radius, int dispersion)
 {
     if (pos.y + radius >= dimensions - 1)
         radius = dimensions - 1 - pos.y;
@@ -50,6 +51,8 @@ void CellGrid::insertSquare(glm::ivec2 pos, Element element, int radius)
     {
         for (int y = 0; y < radius; y++)
         {
+            if (rand() % dispersion)
+                continue;
             switch (element)
             {
             case Element::Vaccum:
@@ -62,10 +65,13 @@ void CellGrid::insertSquare(glm::ivec2 pos, Element element, int radius)
                 insertCell(pos.x + x, pos.y + y, new Sand({ 1, 0.9, 0.3, 1 }));
                 break;
             case Element::Stone:
-                insertCell(pos.x + x, pos.y + y, new Stone(0.5));
+                insertCell(pos.x + x, pos.y + y, new Stone((float)(rand()%100)/255));
                 break;
             case Element::Acid:
                 insertCell(pos.x + x, pos.y + y, new Acid({ 0.1, 0.9, 0.4, 1 }));
+                break;
+            case Element::Metal:
+                insertCell(pos.x + x, pos.y + y, new Metal((((float)(rand() % 2) / 100) + 0.5f) * glm::vec4(0.9, 0.9, 0.9, 1)));
                 break;
             }
         }

@@ -11,7 +11,7 @@ public:
 
 	void insertCell(int x, int y, Cell* cell);
 	void insertCell(glm::ivec2 pos, Cell* cell);
-	void insertSquare(glm::ivec2 pos, Element element, int radius);
+	void insertSquare(glm::ivec2 pos, Element element, int radius, int dispersion);
 
 	void updateAll();
 	Cell* getCell(int x, int y);

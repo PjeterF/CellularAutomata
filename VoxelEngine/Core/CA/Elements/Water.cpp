@@ -3,7 +3,7 @@
 
 Water::Water(glm::vec4 color) : Liquid(color)
 {
-	this->dispersionRate = 2.0f;
+
 }
 
 void Water::update(glm::ivec2 position, CellGrid& grid)

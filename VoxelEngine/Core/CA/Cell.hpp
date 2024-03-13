@@ -20,7 +20,8 @@ enum class Element
 	Water,
 	Sand,
 	Stone,
-	Acid
+	Acid,
+	Metal
 };
 
 class Cell

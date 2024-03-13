@@ -13,6 +13,7 @@
 #include "../Core/CA/Elements/Stone.hpp"
 #include "../Core/CA/Elements/Water.hpp"
 #include "../Core/CA/Elements/Acid.hpp"
+#include "../Core/CA/Elements/Metal.hpp"
 
 struct VoxelGrid
 {
@@ -114,6 +115,9 @@ Application::Application(int wnd_width, int wnd_height)
 	gladLoadGL();
 	glViewport(0, 0, wnd_width, wnd_height);
 
+	glfwSetWindowPos(window, 0, 0);
+	glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+
 	GLFWInputManager::initialize(window);
 
 	IMGUI_CHECKVERSION();
@@ -126,7 +130,8 @@ Application::Application(int wnd_width, int wnd_height)
 
 void Application::run()
 {
-	int dimensions = 125;
+	int dimensions = 250;
+	int cellSize = 4;
 	CellGrid* cellGrid = createCellGrid1(dimensions);
 
 	SSBO_data data;
@@ -177,9 +182,11 @@ void Application::run()
 
 	ShaderProgram shad1("Core/Rendering/Shaders/first.vert", "Core/Rendering/Shaders/first.frag");
 
-	int cellSize = 8;
+
 	int iteration = 0;
 	bool paused = true;
+	Element elementType = Element::Vaccum;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		//Rendering
@@ -196,6 +203,8 @@ void Application::run()
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+
+		
 
 		//UI
 		ImGui_ImplOpenGL3_NewFrame();
@@ -217,7 +226,46 @@ void Application::run()
 		{
 			cellGrid->insertCell(dimensions / 2, dimensions - 1, new Water({ 0.25, 0.4, 0.9, 1 }));
 		}
+
 		ImGui::Checkbox("Paused", &paused);
+		ImGui::End();
+
+		ImGui::Begin("Element selection");
+
+		ImGui::Text("Selected id");
+		ImGui::SameLine();
+		ImGui::Text(std::to_string(int(elementType)).c_str());
+
+		static int radius = 3;
+		static int dispersion = 1;
+		ImGui::InputInt("Radius", &radius);
+		ImGui::InputInt("Dispersion", &dispersion);
+		if (ImGui::Button("Vaccum"))
+			elementType = Element::Vaccum;
+		if (ImGui::Button("Stone"))
+			elementType = Element::Stone;
+		if (ImGui::Button("Sand"))
+			elementType = Element::Sand;
+		if (ImGui::Button("Acid"))
+			elementType = Element::Acid;
+		if (ImGui::Button("Water"))
+			elementType = Element::Water;
+		if (ImGui::Button("Metal"))
+			elementType = Element::Metal;
+
+		if (!ImGui::IsWindowHovered() && !ImGui::IsItemHovered())
+		{
+			if (GLFWInputManager::getInstance().mouseKeyDown[ZE_MOUSE_BUTTON_1])
+			{
+				glm::vec2 cursorPos = GLFWInputManager::getInstance().getCursorPos();
+				cursorPos = (1.0f / cellSize) * cursorPos;
+				if (cellGrid->getCell(cursorPos.x, cursorPos.y) != nullptr)
+				{
+					cellGrid->insertSquare(cursorPos, elementType, radius, dispersion);
+				}
+			}
+		}
+
 		ImGui::End();
 
 		ImGui::Render();
@@ -227,7 +275,7 @@ void Application::run()
 		if (allowStep || !paused)
 		{
 			allowStep = false;
-			bool darken = rand() % 10;
+			/*bool darken = rand() % 10;
 			float scale;
 			if (!darken)
 				scale = 0.8f;
@@ -240,7 +288,7 @@ void Application::run()
 			else
 			{
 				cellGrid->insertCell(dimensions / 2 + rand() % dimensions / 2 - dimensions / 4, dimensions - 1, new Sand(scale * glm::vec4( 1, 0.9, 0.3, 1 )));
-			}
+			}*/
 
 			cellGrid->updateAll();
 		}
@@ -249,17 +297,7 @@ void Application::run()
 		data.grid = cellGrid->getColorGrid();
 		glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4) * data.gridDimensions.x * data.gridDimensions.y, data.grid);
 
-		if (GLFWInputManager::getInstance().mouseKeyDown[ZE_MOUSE_BUTTON_1])
-		{
-			glm::vec2 cursorPos = GLFWInputManager::getInstance().getCursorPos();
-			cursorPos =  (1.0f/cellSize) * cursorPos;
-			if (cellGrid->getCell(cursorPos.x, cursorPos.y) != nullptr)
-			{
-				cellGrid->insertSquare(cursorPos, Element::Acid, 10);
-				//cellGrid->insertCell(cursorPos.x, cursorPos.y, new Acid(glm::vec4(0, 0.9, 0.3, 1)));
-				//cellGrid->insertCell(cursorPos.x, cursorPos.y, new Sand(glm::vec4(1, 0.9, 0.3, 1)));
-			}
-		}
+
 
 		glfwSwapBuffers(window);
 		GLFWInputManager::getInstance().update();
