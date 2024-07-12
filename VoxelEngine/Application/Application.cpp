@@ -1,5 +1,4 @@
 ﻿#include "Application.hpp"
-#include "../Core/Voxel/Voxel.hpp"
 #include <vector>
 #include <chrono>
 #include <thread>
@@ -14,12 +13,6 @@
 #include "../Core/CA/Elements/Water.hpp"
 #include "../Core/CA/Elements/Acid.hpp"
 #include "../Core/CA/Elements/Metal.hpp"
-
-struct VoxelGrid
-{
-	glm::ivec3 gridDimensions;
-	std::vector<Voxel> voxels;
-};
 
 struct SSBO_data
 {
@@ -48,25 +41,6 @@ CellGrid* createCellGrid1(int dimensions)
 		{
 			grid->insertCell(x, y, new Stone((float)(rand() % 50) / 100));
 		}
-	}
-
-	return grid;
-}
-
-VoxelGrid createRandomVoxelGrid(int x, int y, int z)
-{
-	VoxelGrid grid;
-	grid.gridDimensions = { x, y, z };
-
-	int size = x * y * z;
-	grid.voxels.resize(size);
-
-	for (int i = 0; i < size; i++)
-	{
-		if (rand() % 2)
-			grid.voxels[i].rgba = { 1 ,1, 1, 1 };
-		else
-			grid.voxels[i].rgba = { 1 ,0, 0, 1 };
 	}
 
 	return grid;

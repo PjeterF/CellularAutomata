@@ -157,7 +157,6 @@
     <ClCompile Include="Core\Input\Windows\GLFWInputManager.cpp" />
     <ClCompile Include="Core\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="Core\Utility\Octree.cpp" />
-    <ClCompile Include="Core\Voxel\Voxel.cpp" />
     <ClCompile Include="Externals\includes\imgui\imgui.cpp" />
     <ClCompile Include="Externals\includes\imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\includes\imgui\imgui_draw.cpp" />
@@ -188,7 +187,6 @@
     <ClInclude Include="Core\Input\Windows\GLFWInputManager.hpp" />
     <ClInclude Include="Core\Rendering\ShaderProgram.hpp" />
     <ClInclude Include="Core\Utility\Octree.hpp" />
-    <ClInclude Include="Core\Voxel\Voxel.hpp" />
     <ClInclude Include="Externals\includes\imgui\imconfig.h" />
     <ClInclude Include="Externals\includes\imgui\imgui.h" />
     <ClInclude Include="Externals\includes\imgui\imgui_impl_glfw.h" />
